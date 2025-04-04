@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=CronGUI
+Comment=Simple GUI Crontab Editor
+Exec=crongui
+Icon=${SNAP}/meta/gui/icon.png
+Terminal=false
+Type=Application
+Categories=Utility;System;
+Keywords=cron;crontab;scheduler;task;
