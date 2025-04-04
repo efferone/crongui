@@ -10,34 +10,61 @@ class CrontabEditor:
     def __init__(self, root):
         self.root = root
         self.root.title("CronGUI - Crontab Editor")
-        self.root.geometry("800x600")
-        
+        self.root.geometry("900x750")
+
+        # Apply the dark blue theme
+        self.apply_dark_blue_theme()
+
         # Check if running as root or with sudo
         self.is_elevated = os.geteuid() == 0
-        
+
         # Initialize crontab entries and username
         self.crontab_entries = []
         self.current_user = self.get_username()
-        
-        # Create main frame
+
+        # main frame
         self.main_frame = ttk.Frame(self.root, padding="10")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
-        
-        # Create top controls
+
+        # top controls
         self.create_top_controls()
-        
-        # Create entries frame
+
+        # entries frame
         self.create_entries_frame()
-        
-        # Create editor frame
+
+        # editor frame
         self.create_editor_frame()
-        
-        # Load crontab entries
+
+        # getcrontab entries
         self.load_crontab()
-        
-        # Add status bar
+
+        # adding a status bar
         self.create_status_bar()
-    
+
+    def apply_dark_blue_theme(self):
+        """dark blue 4tw"""
+        self.root.configure(bg="#2B2B52")  # Dark blue background for the main window
+
+        # Style ttk widgets 
+        style = ttk.Style(self.root)
+        style.configure("TFrame", background="#2B2B52")
+        style.configure("TLabel", background="#2B2B52", foreground="white")
+        style.configure("TButton",
+                        background="#4834D4",
+                        foreground="white",
+                        relief="flat",
+                        padding=6)
+        style.map("TButton",
+                  background=[("active", "#5F4B8B")],  # Slightly lighter colour on hover
+                  relief=[("active", "groove")])
+
+        # Treeview config, not sure if gonna use yet
+        style.configure("Treeview",
+                        background="#3B3B6B",
+                        foreground="white")
+        style.map("Treeview",
+                  background=[("selected", "#4834D4")])
+
     def get_username(self):
         """Get the actual username even when run with sudo"""
         if 'SUDO_USER' in os.environ:
@@ -50,37 +77,38 @@ class CrontabEditor:
                 return pwd.getpwuid(os.getuid()).pw_name
             except:
                 return "unknown"
-    
+
     def create_status_bar(self):
         """Create a status bar at the bottom"""
         status_frame = ttk.Frame(self.root)
         status_frame.pack(fill=tk.X, side=tk.BOTTOM, pady=2)
-        
-        # Show current user and permission status
+
+        # display current user permissions
         status_text = f"User: {self.current_user}"
         if not self.is_elevated:
             status_text += " (Limited permissions - some operations may fail)"
-        
+
         status_label = ttk.Label(status_frame, text=status_text)
         status_label.pack(side=tk.LEFT, padx=5)
-    
+
     def create_top_controls(self):
         """Create top control buttons"""
         top_frame = ttk.Frame(self.main_frame)
         top_frame.pack(fill=tk.X, pady=(0, 10))
-        
+
         refresh_btn = ttk.Button(top_frame, text="Refresh", command=self.load_crontab)
         refresh_btn.pack(side=tk.LEFT, padx=5)
-        
+
         add_btn = ttk.Button(top_frame, text="Add New Entry", command=self.add_new_entry)
         add_btn.pack(side=tk.LEFT, padx=5)
-        
+
         save_btn = ttk.Button(top_frame, text="Save Changes", command=self.save_crontab)
         save_btn.pack(side=tk.RIGHT, padx=5)
-        
-        # Add help button
+
+        # help button, set up below
         help_btn = ttk.Button(top_frame, text="Help", command=self.show_help)
         help_btn.pack(side=tk.RIGHT, padx=5)
+
     
     def show_help(self):
         """Show help dialog with crontab syntax information"""
@@ -124,32 +152,32 @@ Examples:
         entries_frame = ttk.LabelFrame(self.main_frame, text="Current Crontab Entries")
         entries_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
-        # Create treeview for displaying entries
+        # let's make a treeview for displaying entries
         columns = ("schedule", "command", "comment")
         self.entries_tree = ttk.Treeview(entries_frame, columns=columns, show="headings")
         
-        # Define headings
+        #  headings
         self.entries_tree.heading("schedule", text="Schedule")
         self.entries_tree.heading("command", text="Command")
         self.entries_tree.heading("comment", text="Comment")
         
-        # Define columns
+        # columns
         self.entries_tree.column("schedule", width=200)
         self.entries_tree.column("command", width=350)
         self.entries_tree.column("comment", width=150)
         
-        # Add scrollbar
+        # scrollbar
         scrollbar = ttk.Scrollbar(entries_frame, orient=tk.VERTICAL, command=self.entries_tree.yview)
         self.entries_tree.configure(yscrollcommand=scrollbar.set)
         
-        # Pack widgets
+        # widgets
         self.entries_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Bind selection event
         self.entries_tree.bind("<<TreeviewSelect>>", self.on_entry_select)
         
-        # Add delete function on right-click
+        # Add a delete function on right-click
         self.entries_tree.bind("<Button-3>", self.show_context_menu)
     
     def create_editor_frame(self):
@@ -157,7 +185,7 @@ Examples:
         self.editor_frame = ttk.LabelFrame(self.main_frame, text="Edit Entry")
         self.editor_frame.pack(fill=tk.BOTH, pady=5)
         
-        # Create notebook with tabs for basic and advanced editing
+        # tabs for basic and advanced editing
         self.notebook = ttk.Notebook(self.editor_frame)
         self.notebook.pack(fill=tk.BOTH, expand=True, pady=5)
         
