@@ -12,13 +12,13 @@ class CrontabEditor:
         self.root.title("CronGUI - Crontab Editor")
         self.root.geometry("900x750")
 
-        # Apply the dark blue theme
+        # dark blue theme 4tw, maybe I'll add a themes option later
         self.apply_dark_blue_theme()
 
         # Check if running as root or with sudo
         self.is_elevated = os.geteuid() == 0
 
-        # Initialize crontab entries and username
+        # Init cron entries and username
         self.crontab_entries = []
         self.current_user = self.get_username()
 
@@ -38,14 +38,14 @@ class CrontabEditor:
         # getcrontab entries
         self.load_crontab()
 
-        # adding a status bar
+        # the status bar
         self.create_status_bar()
 
     def apply_dark_blue_theme(self):
-        """dark blue 4tw"""
-        self.root.configure(bg="#2B2B52")  # Dark blue background for the main window
+        """dark blue aye!!"""
+        self.root.configure(bg="#2B2B52")  
 
-        # Style ttk widgets 
+        # style the ttk widgets 
         style = ttk.Style(self.root)
         style.configure("TFrame", background="#2B2B52")
         style.configure("TLabel", background="#2B2B52", foreground="white")
@@ -55,10 +55,10 @@ class CrontabEditor:
                         relief="flat",
                         padding=6)
         style.map("TButton",
-                  background=[("active", "#5F4B8B")],  # Slightly lighter colour on hover
+                  background=[("active", "#5F4B8B")],  # lighter colour on hover
                   relief=[("active", "groove")])
 
-        # Treeview config, not sure if gonna use yet
+        # Treeview config, may remove this in future
         style.configure("Treeview",
                         background="#3B3B6B",
                         foreground="white")
@@ -66,7 +66,7 @@ class CrontabEditor:
                   background=[("selected", "#4834D4")])
 
     def get_username(self):
-        """Get the actual username even when run with sudo"""
+        """get username even if run with sudo"""
         if 'SUDO_USER' in os.environ:
             return os.environ['SUDO_USER']
         elif 'USER' in os.environ:
@@ -79,20 +79,20 @@ class CrontabEditor:
                 return "unknown"
 
     def create_status_bar(self):
-        """Create a status bar at the bottom"""
+        """status bar at the bottom"""
         status_frame = ttk.Frame(self.root)
         status_frame.pack(fill=tk.X, side=tk.BOTTOM, pady=2)
 
         # display current user permissions
         status_text = f"User: {self.current_user}"
         if not self.is_elevated:
-            status_text += " (Limited permissions - some operations may fail)"
+            status_text += " (you have limited permissions - some operations may fail)"
 
         status_label = ttk.Label(status_frame, text=status_text)
         status_label.pack(side=tk.LEFT, padx=5)
 
     def create_top_controls(self):
-        """Create top control buttons"""
+        """ main control buttons"""
         top_frame = ttk.Frame(self.main_frame)
         top_frame.pack(fill=tk.X, pady=(0, 10))
 
@@ -105,17 +105,17 @@ class CrontabEditor:
         save_btn = ttk.Button(top_frame, text="Save Changes", command=self.save_crontab)
         save_btn.pack(side=tk.RIGHT, padx=5)
 
-        # help button, set up below
+        # help button, WIP - would maybe be better as a drop down?
         help_btn = ttk.Button(top_frame, text="Help", command=self.show_help)
         help_btn.pack(side=tk.RIGHT, padx=5)
 
     
     def show_help(self):
-        """Show help dialog with crontab syntax information"""
+        """help dialog with crontab syntax info, stop you using cronguru"""
         help_text = """
-Crontab Syntax Help:
+Syntax help:
 
-Time Fields Format:
+Time Format:
 * Minute (0-59)
 * Hour (0-23)
 * Day of month (1-31)
@@ -128,7 +128,7 @@ Special Characters:
 * Hyphen (-): Range of values
 * Slash (/): Step values
 
-Examples:
+Some examples:
 * "0 12 * * *" - Run at noon every day
 * "*/15 * * * *" - Run every 15 minutes
 * "0 0 * * 0" - Run at midnight on Sundays
@@ -136,7 +136,7 @@ Examples:
         """
         
         help_window = tk.Toplevel(self.root)
-        help_window.title("Crontab Syntax Help")
+        help_window.title("Cron Syntax")
         help_window.geometry("500x400")
         
         text_widget = tk.Text(help_window, wrap=tk.WORD, padx=10, pady=10)
@@ -148,7 +148,7 @@ Examples:
         close_btn.pack(pady=10)
     
     def create_entries_frame(self):
-        """Create the frame that displays crontab entries"""
+        """the frame that displays crontab entries"""
         entries_frame = ttk.LabelFrame(self.main_frame, text="Current Crontab Entries")
         entries_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
@@ -174,14 +174,14 @@ Examples:
         self.entries_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # Bind selection event
+        # Bind selection
         self.entries_tree.bind("<<TreeviewSelect>>", self.on_entry_select)
         
-        # Add a delete function on right-click
+        # right-click for delete, should add more
         self.entries_tree.bind("<Button-3>", self.show_context_menu)
     
     def create_editor_frame(self):
-        """Create the frame for editing a crontab entry"""
+        """the frame for editing a crontab entry"""
         self.editor_frame = ttk.LabelFrame(self.main_frame, text="Edit Entry")
         self.editor_frame.pack(fill=tk.BOTH, pady=5)
         
@@ -189,15 +189,15 @@ Examples:
         self.notebook = ttk.Notebook(self.editor_frame)
         self.notebook.pack(fill=tk.BOTH, expand=True, pady=5)
         
-        # Basic editor tab
+        # basic editor
         basic_tab = ttk.Frame(self.notebook)
         self.notebook.add(basic_tab, text="Basic")
         
-        # Create fields for time components
+        # fields for times etc 
         time_frame = ttk.Frame(basic_tab)
         time_frame.pack(fill=tk.X, pady=5)
         
-        # Labels for crontab time fields
+        # labels for time fields
         fields = ["Minute", "Hour", "Day", "Month", "Weekday"]
         field_values = {
             "Minute": ["*"] + [str(i) for i in range(0, 60, 5)],
@@ -213,14 +213,14 @@ Examples:
             label = ttk.Label(time_frame, text=field)
             label.grid(row=0, column=i, padx=5, pady=5)
             
-            # Create combobox with common values
+            # cheeky combobox with common values
             combo = ttk.Combobox(time_frame, width=8, values=field_values[field])
             combo.grid(row=1, column=i, padx=5, pady=5)
             combo.insert(0, "*")  # Default value
             
             self.time_entries[field.lower()] = combo
         
-        # Command entry
+        # the ccommand entry
         command_frame = ttk.Frame(basic_tab)
         command_frame.pack(fill=tk.X, pady=5)
         
@@ -230,7 +230,7 @@ Examples:
         self.command_entry = ttk.Entry(command_frame)
         self.command_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         
-        # Comment entry
+        # and a comment entry, not how I want comments to be added yet
         comment_frame = ttk.Frame(basic_tab)
         comment_frame.pack(fill=tk.X, pady=5)
         
@@ -240,7 +240,7 @@ Examples:
         self.comment_entry = ttk.Entry(comment_frame)
         self.comment_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         
-        # Common presets
+        # some common cron presets
         presets_frame = ttk.LabelFrame(basic_tab, text="Common Schedules")
         presets_frame.pack(fill=tk.X, pady=10)
         
@@ -257,23 +257,23 @@ Examples:
                             command=lambda s=schedule: self.apply_preset(s))
             btn.grid(row=i//3, column=i%3, padx=5, pady=5, sticky="ew")
         
-        # Advanced editor tab
+        # "Advanced editor", basically just copy and paste or type a cronjob you know
         advanced_tab = ttk.Frame(self.notebook)
-        self.notebook.add(advanced_tab, text="Advanced")
+        self.notebook.add(advanced_tab, text="Raw / Advanced")
         
-        # Raw crontab entry
+        # raw job
         raw_label = ttk.Label(advanced_tab, text="Raw crontab entry:")
         raw_label.pack(anchor=tk.W, padx=5, pady=5)
         
         self.raw_entry = ttk.Entry(advanced_tab)
         self.raw_entry.pack(fill=tk.X, padx=5, expand=False)
         
-        # Add explanation text
+        # explain how cron times work
         explanation = ttk.Label(advanced_tab, text="Format: minute hour day month weekday command # comment",
                              wraplength=700)
         explanation.pack(anchor=tk.W, padx=5, pady=5)
         
-        # Buttons frame
+        # buttons frame
         buttons_frame = ttk.Frame(self.editor_frame)
         buttons_frame.pack(fill=tk.X, pady=10)
         
@@ -284,7 +284,7 @@ Examples:
         clear_btn.pack(side=tk.LEFT, padx=5)
     
     def apply_preset(self, schedule):
-        """Apply a preset schedule"""
+        """job schedule"""
         parts = schedule.split()
         fields = ["minute", "hour", "day", "month", "weekday"]
         
@@ -293,7 +293,7 @@ Examples:
             self.time_entries[field].insert(0, parts[i])
     
     def clear_fields(self):
-        """Clear all input fields"""
+        """clear all..."""
         fields = ["minute", "hour", "day", "month", "weekday"]
         for field in fields:
             self.time_entries[field].delete(0, tk.END)
@@ -304,52 +304,52 @@ Examples:
         self.raw_entry.delete(0, tk.END)
     
     def load_crontab(self):
-        """Load current crontab entries"""
+        """load current cronjobs"""
         try:
-            # Run the crontab -l command
+            # just crontab -l 
             result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
             
             if result.returncode != 0:
-                # If user has no crontab, this is not an error
+                # if you don't have one it's not an issue
                 if "no crontab" in result.stderr:
                     self.crontab_entries = []
                 else:
-                    messagebox.showerror("Error", f"Failed to load crontab: {result.stderr}")
+                    messagebox.showerror("Error", f"failed to load crontab: {result.stderr}")
                     return
             
-            # Parse the output
+            # parse the output
             lines = result.stdout.strip().split('\n') if result.stdout.strip() else []
             self.crontab_entries = []
             
             for line in lines:
                 line = line.strip()
                 
-                # Skip empty lines
+                # skip any empty lines
                 if not line:
                     continue
                 
-                # Skip comments but not inline comments
+                # skip comments, keep inline comments
                 if line.startswith('#'):
                     continue
                 
-                # Add to our entries list
+                # add what we go to the entries list
                 self.crontab_entries.append(line)
             
-            # Update the UI
+            # then update the UI
             self.update_entries_display()
             
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
     
     def update_entries_display(self):
-        """Update the treeview with current entries"""
+        """update the treeview with current jobs"""
         # Clear the treeview
         for item in self.entries_tree.get_children():
             self.entries_tree.delete(item)
         
-        # Add entries to the treeview
+        # ddd entries to the treeview
         for i, entry in enumerate(self.crontab_entries):
-            # Check for inline comments
+            # check for inline comments
             comment = ""
             if '#' in entry:
                 entry_parts, comment = entry.split('#', 1)
@@ -358,30 +358,30 @@ Examples:
             else:
                 entry_parts = entry
             
-            # Split entry into schedule and command
-            parts = entry_parts.split(None, 5)  # Split at most 5 times
+            # split entry into schedule and command, finally working
+            parts = entry_parts.split(None, 5)  # Split at most 5 times, only 5 options so...
             
             if len(parts) >= 6:
                 schedule = " ".join(parts[:5])
                 command = parts[5]
             else:
-                schedule = "Invalid format"
+                schedule = "invalid time and date job schedule"
                 command = entry_parts
             
             self.entries_tree.insert("", tk.END, values=(schedule, command, comment), iid=str(i))
     
     def on_entry_select(self, event):
-        """Handle selection of an entry in the treeview"""
+        """handle user selection of an entry in the treeview"""
         selected_items = self.entries_tree.selection()
         
         if not selected_items:
             return
         
-        # Get the selected entry
+        # get the selected entry
         item_id = selected_items[0]
         entry = self.crontab_entries[int(item_id)]
         
-        # Check for inline comments
+        # check for inline comments
         comment = ""
         if '#' in entry:
             entry_parts, comment = entry.split('#', 1)
@@ -390,118 +390,118 @@ Examples:
         else:
             entry_parts = entry
         
-        # Parse the entry
+        # parse the entry
         parts = entry_parts.split(None, 5)  # Split at most 5 times
         
         if len(parts) >= 6:
-            # Fill the time entries
+            # fill the times/days
             fields = ["minute", "hour", "day", "month", "weekday"]
             for i, field in enumerate(fields):
                 self.time_entries[field].delete(0, tk.END)
                 self.time_entries[field].insert(0, parts[i])
             
-            # Fill the command entry
+            # fill the command
             self.command_entry.delete(0, tk.END)
             self.command_entry.insert(0, parts[5])
             
-            # Fill the comment entry
+            # add the comment if there is one
             self.comment_entry.delete(0, tk.END)
             self.comment_entry.insert(0, comment)
             
-            # Fill the raw entry
+            # fill the raw/full job if you used that
             self.raw_entry.delete(0, tk.END)
             self.raw_entry.insert(0, entry_parts)
     
     def update_entry(self):
-        """Update the selected entry with values from editor"""
+        """update the selected entry with values from the editor"""
         selected_items = self.entries_tree.selection()
         
         if not selected_items:
-            messagebox.showwarning("Warning", "No entry selected")
+            messagebox.showwarning("Warning", "you didn't select anyting to edit")
             return
         
-        # Get current active tab
+        # get the current active tab
         active_tab = self.notebook.index(self.notebook.select())
         
-        if active_tab == 0:  # Basic tab
-            # Get the values from the editor
+        if active_tab == 0:  # basic tab
+            # get the values from the editor
             minute = self.time_entries["minute"].get()
             hour = self.time_entries["hour"].get()
             day = self.time_entries["day"].get()
             month = self.time_entries["month"].get()
             weekday = self.time_entries["weekday"].get()
             
-            # Remove the day name part from weekday if present
+            # remove the day name part from weekday if present
             if '(' in weekday:
                 weekday = weekday.split('(')[0].strip()
                 
             command = self.command_entry.get()
             comment = self.comment_entry.get()
             
-            # Validate input (very basic validation)
+            # validate input (very basic validation, needs improved)
             if not (minute and hour and day and month and weekday and command):
                 messagebox.showwarning("Warning", "All schedule fields and command are required")
                 return
             
-            # Create the crontab entry
+            # FINALLY we can create the new crontab entry
             entry = f"{minute} {hour} {day} {month} {weekday} {command}"
             
-        else:  # Advanced tab
+        else:  # advanced tab
             entry = self.raw_entry.get()
             
-            # Simple validation
+            #  validation
             if not entry or len(entry.split()) < 6:
                 messagebox.showwarning("Warning", "Invalid crontab format. Need at least 6 components (5 time fields + command)")
                 return
             
-            # Extract comment from basic tab
+            # get comment 
             comment = self.comment_entry.get()
         
-        # Add comment if present
+        # add comment if present
         if comment:
             entry = f"{entry} # {comment}"
         
-        # Update the entry in our list
+        # update the entry
         item_id = selected_items[0]
         self.crontab_entries[int(item_id)] = entry
         
-        # Update the display
+        # update the display
         self.update_entries_display()
     
     def add_new_entry(self):
-        """Add a new empty entry"""
-        # Add a default entry
-        self.crontab_entries.append("0 0 * * * echo 'New task'")
+        """add a new empty entry"""
+        # default new job
+        self.crontab_entries.append("* * * * * echo 'New task'")
         
-        # Update the display
+        # update the display again
         self.update_entries_display()
         
-        # Select the new entry
+        # select the new entry
         new_id = len(self.crontab_entries) - 1
         self.entries_tree.selection_set(str(new_id))
         
-        # Trigger the selection event
+        # trigger the selection
         self.on_entry_select(None)
     
     def show_context_menu(self, event):
         """Show context menu on right-click"""
-        # Get the item under cursor
+        # get the item under cursor
         item = self.entries_tree.identify_row(event.y)
         
         if item:
-            # Select the item
+            # select it
             self.entries_tree.selection_set(item)
             
-            # Create a context menu
+            # create a context menu
             context_menu = tk.Menu(self.root, tearoff=0)
             context_menu.add_command(label="Delete", command=self.delete_selected_entry)
             context_menu.add_command(label="Duplicate", command=self.duplicate_selected_entry)
             
-            # Display the context menu
+            # display the menu
             context_menu.post(event.x_root, event.y_root)
     
     def duplicate_selected_entry(self):
-        """Duplicate the selected entry"""
+        """duplicate the entry if you want.."""
         selected_items = self.entries_tree.selection()
         
         if not selected_items:
@@ -510,18 +510,18 @@ Examples:
         item_id = selected_items[0]
         index = int(item_id)
         
-        # Duplicate the entry
+        # dupe entry
         self.crontab_entries.append(self.crontab_entries[index])
         
-        # Update the display
+        # update display
         self.update_entries_display()
         
-        # Select the new entry
+        # select the new one
         new_id = len(self.crontab_entries) - 1
         self.entries_tree.selection_set(str(new_id))
     
     def delete_selected_entry(self):
-        """Delete the selected entry"""
+        """delete the selected entry"""
         selected_items = self.entries_tree.selection()
         
         if not selected_items:
@@ -530,25 +530,25 @@ Examples:
         item_id = selected_items[0]
         index = int(item_id)
         
-        # Remove the entry from our list
+        # remove the job
         del self.crontab_entries[index]
         
-        # Update the display
+        # update display, do I have to keep doing this :cry:
         self.update_entries_display()
     
     def save_crontab(self):
-        """Save the current entries back to crontab"""
+        """save the entries back to your crontab"""
         try:
-            # Create a temporary file with our entries
+            # create a temp file with the entries
             with tempfile.NamedTemporaryFile(mode='w+', delete=False) as temp_file:
                 for entry in self.crontab_entries:
                     temp_file.write(f"{entry}\n")
                 temp_file_name = temp_file.name
             
-            # Use the temporary file to update crontab
+            # use the temp file to update crontab
             result = subprocess.run(["crontab", temp_file_name], capture_output=True, text=True)
             
-            # Clean up the temporary file
+            # clean up temp file
             os.unlink(temp_file_name)
             
             if result.returncode == 0:
@@ -559,11 +559,11 @@ Examples:
                 
                 if not self.is_elevated:
                     messagebox.showinfo("Permission Issue", 
-                                    "You may need to run this application with elevated privileges.\n"
+                                    "Is yoour crontab editable as standard?\n"
                                     "Try running with sudo or as root.")
         
         except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+            messagebox.showerror("Error", f"We have a problem: {str(e)}")
 
 def main():
     root = tk.Tk()
