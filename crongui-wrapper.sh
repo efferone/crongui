@@ -7,5 +7,5 @@ if [ "$(id -u)" -ne 0 ]; then
     exec pkexec "$0" "$@"
 fi
 
-# Run the actual app
+# run the actual app
 exec python3 "$SNAP/bin/crongui.py" "$@"

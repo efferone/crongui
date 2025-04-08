@@ -4,3 +4,21 @@ attempt at making a GUI crontab editor. originally to help colleagues who weren'
 
 copied over my from Gitea now that it is mostly working.
 
+# Install
+
+python setup.py install
+
+or if you prefer pip
+
+pip install git+https://github.com/efferone/crongui.git
+
+then run it with:
+crongui
+
+or just use the wrapper script to start the application without installing (in beta):
+./crongui-wrapper.sh
+
+Please feel free to make improvments, in a dev environment you might want to use
+
+pip install -e .
+

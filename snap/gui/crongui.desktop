@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=CronGUI
-Comment=Simple GUI Crontab Editor
+Comment=Basic GUI editor for cron
 Exec=crongui
 Icon=${SNAP}/meta/gui/icon.png
 Terminal=false
