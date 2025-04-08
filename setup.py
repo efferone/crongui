@@ -3,9 +3,9 @@ from setuptools import setup
 setup(
     name="crongui",
     version="0.1",
-    description="A simple GUI crontab editor",
-    author="Your Name",
-    author_email="your.email@example.com",
+    description="a GUI editor for cron",
+    author="Euan Fisher",
+    author_email="euanfisher@gmail.com",
     py_modules=["crongui"],
     install_requires=[],
     entry_points={

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Wrapper script for crongui
 
-# Ensure we have the right permissions or use pkexec
+# do we have permissions? or use pkexec
 if [ "$(id -u)" -ne 0 ]; then
     echo "CronGUI needs elevated privileges to edit crontabs"
     exec pkexec "$0" "$@"

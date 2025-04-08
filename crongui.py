@@ -15,10 +15,10 @@ class CrontabEditor:
         # dark blue theme 4tw, maybe I'll add a themes option later
         self.apply_dark_blue_theme()
 
-        # Check if running as root or with sudo
+        # check if running as root or with sudo
         self.is_elevated = os.geteuid() == 0
 
-        # Init cron entries and username
+        # init cron entries and username
         self.crontab_entries = []
         self.current_user = self.get_username()
 
@@ -115,7 +115,7 @@ class CrontabEditor:
         help_text = """
 Syntax help:
 
-Time Format:
+Time Formats:
 * Minute (0-59)
 * Hour (0-23)
 * Day of month (1-31)
@@ -128,7 +128,7 @@ Special Characters:
 * Hyphen (-): Range of values
 * Slash (/): Step values
 
-Some examples:
+A couple examples:
 * "0 12 * * *" - Run at noon every day
 * "*/15 * * * *" - Run every 15 minutes
 * "0 0 * * 0" - Run at midnight on Sundays
@@ -230,7 +230,7 @@ Some examples:
         self.command_entry = ttk.Entry(command_frame)
         self.command_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         
-        # and a comment entry, not how I want comments to be added yet
+        # and a comment entry, why not eh
         comment_frame = ttk.Frame(basic_tab)
         comment_frame.pack(fill=tk.X, pady=5)
         
@@ -343,7 +343,7 @@ Some examples:
     
     def update_entries_display(self):
         """update the treeview with current jobs"""
-        # Clear the treeview
+        # clear the treeview
         for item in self.entries_tree.get_children():
             self.entries_tree.delete(item)
         
@@ -359,7 +359,7 @@ Some examples:
                 entry_parts = entry
             
             # split entry into schedule and command, finally working
-            parts = entry_parts.split(None, 5)  # Split at most 5 times, only 5 options so...
+            parts = entry_parts.split(None, 5)  # split at most 5 times, only 5 options so...
             
             if len(parts) >= 6:
                 schedule = " ".join(parts[:5])
