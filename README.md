@@ -6,7 +6,15 @@ copied over my from Gitea now that it is mostly working.
 
 # Install
 
-python setup.py install
+adjust the below to suit your version of Python.
+
+
+- Requirments:
+python3
+python3-tk
+python3-setuptools
+
+python3 setup.py install
 
 or if you prefer pip
 
