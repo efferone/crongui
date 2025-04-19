@@ -58,12 +58,44 @@ class CrontabEditor:
                   background=[("active", "#5F4B8B")],  # lighter colour on hover
                   relief=[("active", "groove")])
 
-        # Treeview config, may remove this in future
+        # Treeview full style override
         style.configure("Treeview",
-                        background="#3B3B6B",
-                        foreground="white")
+                background="#3A3A3A",      # gunmetal grey
+                foreground="white",
+                fieldbackground="#3A3A3A", # make sure cells match
+                bordercolor="#2B2B52",
+                borderwidth=1)
+
         style.map("Treeview",
-                  background=[("selected", "#4834D4")])
+          background=[("selected", "#4834D4")],
+          foreground=[("selected", "white")])
+
+        # Heading styling (column headers)
+        style.configure("Treeview.Heading",
+                background="#2B2B52",
+                foreground="white",
+                font=('TkDefaultFont', 10, 'bold'))
+        # Use a gunmetal/light grey color
+        light_gunmetal = "#3A3A3A"
+        text_fg = "white"
+
+        # Style Entry and Combobox (background has to be set manually later for some)
+        style.configure("TEntry", fieldbackground=light_gunmetal, foreground=text_fg)
+        style.configure("TCombobox", fieldbackground=light_gunmetal, background=light_gunmetal, foreground=text_fg)
+
+        # Notebook background
+        style.configure("TNotebook", background=light_gunmetal)
+        style.configure("TNotebook.Tab", background="#2B2B52", foreground=text_fg)
+        style.map("TNotebook.Tab",
+          background=[("selected", light_gunmetal)],
+          foreground=[("selected", text_fg)])
+
+        # LabelFrame title
+        style.configure("TLabelframe.Label", background="#2B2B52", foreground=text_fg)
+        style.configure("TLabelframe", background="#2B2B52")
+
+        # Scrollbar (optional)
+        style.configure("Vertical.TScrollbar", background="#4834D4", troughcolor=light_gunmetal)          
 
     def get_username(self):
         """get username even if run with sudo"""
