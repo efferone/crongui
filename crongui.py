@@ -39,6 +39,9 @@ class ModernCronGUI:
         # Entries view
         self.create_entries_view()
         
+        # Initialize context menu
+        self.context_menu = None
+        
         # Editor section
         self.create_editor_section()
         
@@ -462,8 +465,6 @@ class ModernCronGUI:
         self.comment_entry = ttk.Entry(comment_frame, style="TEntry")
         self.comment_entry.pack(fill=tk.X, ipady=5)  # Added internal padding
         
-        # Removed Quick Schedules section as requested
-        
         # Advanced editor tab
         advanced_tab = ttk.Frame(self.notebook)
         self.notebook.add(advanced_tab, text="Advanced")
@@ -762,7 +763,6 @@ class ModernCronGUI:
         self.update_entries_display()
         
         # Select the new entry
-# Select the new entry
         new_id = len(self.crontab_entries) - 1
         self.entries_tree.selection_set(str(new_id))
         self.entries_tree.see(str(new_id))
@@ -773,7 +773,7 @@ class ModernCronGUI:
         # No popup message as requested
     
     def show_context_menu(self, event):
-        """Show context menu on right-click"""
+        """Show context menu on right-click with proper dismissal behavior"""
         item = self.entries_tree.identify_row(event.y)
         
         if item:
@@ -781,13 +781,29 @@ class ModernCronGUI:
             self.entries_tree.selection_set(item)
             
             # Create context menu
-            context_menu = tk.Menu(self.root, tearoff=0, bg=self.bg_medium, fg=self.text_light)
-            context_menu.add_command(label="Delete Entry", command=self.delete_selected_entry)
-            context_menu.add_command(label="Duplicate Entry", command=self.duplicate_selected_entry)
+            self.context_menu = tk.Menu(self.root, tearoff=0, bg=self.bg_medium, fg=self.text_light)
+            self.context_menu.add_command(label="Delete Entry", command=self.delete_selected_entry)
+            self.context_menu.add_command(label="Duplicate Entry", command=self.duplicate_selected_entry)
+            
+            # Add bindings to close the menu when clicking elsewhere
+            self.root.bind("<Button-1>", self.close_context_menu)
+            self.entries_tree.bind("<Button-1>", self.close_context_menu)
             
             # Display the menu
-            context_menu.post(event.x_root, event.y_root)
+            self.context_menu.post(event.x_root, event.y_root)
     
+    def close_context_menu(self, event=None):
+        """Close the context menu when clicking elsewhere"""
+        if hasattr(self, 'context_menu') and self.context_menu:
+            self.context_menu.unpost()
+            
+        # Remove the temporary bindings
+        self.root.unbind("<Button-1>")
+        self.entries_tree.unbind("<Button-1>")
+        
+        # Restore the original treeview binding
+        self.entries_tree.bind("<Button-3>", self.show_context_menu)
+        
     def duplicate_selected_entry(self):
         """Duplicate the selected entry"""
         selected_items = self.entries_tree.selection()
