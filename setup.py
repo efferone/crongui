@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="crongui",
-    version="0.1.1",
+    version="0.2.0",
     description="a GUI editor for cron",
     author="Euan Fisher",
     py_modules=["crongui"],
