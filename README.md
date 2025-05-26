@@ -1,8 +1,22 @@
 # crongui
 
+![cron5.png](cron5.png)
+
 attempt at making a GUI crontab editor. originally to help colleagues who weren't so used to cron.
 
-copied over my from Gitea now that it is mostly working.
+copied over my from Gitea now that it is "public-ready", and hoping others will benefit.
+
+# Features
+
+- Loads current user's cron entries when the application opens
+
+- Creates a backup before making any changes
+
+- Easy add and save new cronjobs
+
+- Drop down menus for users unfamiliar with cron's schedule structure
+
+- 'Advanced' / 'Raw' tab for users who prefer to type out the full job, including schedule. 
 
 # Install
 
