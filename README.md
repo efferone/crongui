@@ -2,9 +2,14 @@
 
 ![cron5.png](cron5.png)
 
+
 attempt at making a GUI crontab editor. originally to help colleagues who weren't so used to cron.
 
 copied over my from Gitea now that it is "public-ready", and hoping others will benefit.
+
+# help from genAI disclaimer ~ ~ ~
+
+Python is still something I'm getting to grips with so thanks to Claude for lots of help and answering a hundred "what have I done wrong here" questions
 
 # Features
 
